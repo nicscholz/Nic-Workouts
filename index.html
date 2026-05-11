@@ -4,15 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>LIFT — Workout App</title>
-
-  <!-- PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="LIFT" />
   <meta name="theme-color" content="#0A0A0A" />
   <meta name="mobile-web-app-capable" content="yes" />
-
-  <!-- App Icon (inline SVG as data URI) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMEEwQTBBIi8+PHRleHQgeD0iOTAiIHk9IjExNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNzIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNFOEZGM0QiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkw8L3RleHQ+PC9zdmc+" />
 
   <style>
@@ -21,11 +17,15 @@
     :root {
       --bg: #0A0A0A;
       --surface: #0f0f0f;
+      --surface2: #141414;
       --border: #1e1e1e;
       --text: #F0EDE8;
       --muted: #555;
       --accent-upper: #E8FF3D;
       --accent-full: #3DFFE8;
+      --warm: #FF9F3D;
+      --top: #E8FF3D;
+      --backdown: #3DFFE8;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -46,411 +46,246 @@
       overflow: hidden;
     }
 
-    /* ── SCREENS ── */
-    .screen { display: none; flex-direction: column; height: 100%; }
+    .screen { display: none; flex-direction: column; height: 100%; overflow: hidden; }
     .screen.active { display: flex; }
 
-    /* ── HOME SCREEN ── */
-    #home {
-      padding: 0;
-      background: var(--bg);
-    }
+    .scrollable { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    ::-webkit-scrollbar { display: none; }
 
+    /* ══ HOME ══ */
     .home-header {
-      padding: 36px 28px 24px;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
+      padding: 36px 28px 24px; border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden; flex-shrink: 0;
     }
-
     .home-header::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -40px;
+      content: ''; position: absolute; top: -60px; right: -40px;
       width: 260px; height: 260px;
       background: radial-gradient(circle, #E8FF3D18 0%, transparent 65%);
       pointer-events: none;
     }
-
-    .app-label {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .app-title {
-      font-family: 'Bebas Neue', Georgia, serif;
-      font-size: 72px;
-      line-height: 0.9;
-      letter-spacing: 0.04em;
-      color: var(--text);
-    }
-
+    .app-label { font-size: 10px; letter-spacing: 0.22em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+    .app-title { font-family: 'Bebas Neue', Georgia, serif; font-size: 72px; line-height: 0.9; letter-spacing: 0.04em; }
     .app-title span { color: var(--accent-upper); }
+    .home-subtitle { margin-top: 10px; font-size: 11px; color: var(--muted); }
 
-    .home-subtitle {
-      margin-top: 10px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .program-cards {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 20px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .program-cards { padding: 24px 20px 32px; display: flex; flex-direction: column; gap: 16px; }
 
     .program-card {
-      border-radius: 10px;
-      padding: 24px 20px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.15s, opacity 0.15s;
-      border: 1px solid transparent;
+      border-radius: 10px; padding: 24px 20px; cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: transform 0.15s, opacity 0.15s; border: 1px solid transparent;
     }
-
     .program-card:active { transform: scale(0.97); opacity: 0.9; }
-
-    .program-card.upper {
-      background: #111;
-      border-color: #E8FF3D33;
-    }
-    .program-card.full {
-      background: #0d1111;
-      border-color: #3DFFE833;
-    }
+    .program-card.upper { background: #111; border-color: #E8FF3D33; }
+    .program-card.full  { background: #0d1111; border-color: #3DFFE833; }
 
     .card-tag {
-      font-size: 9px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 3px;
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      margin-bottom: 10px; display: inline-block; padding: 3px 10px; border-radius: 3px;
     }
-
     .upper .card-tag { color: var(--accent-upper); background: #E8FF3D18; border: 1px solid #E8FF3D33; }
-    .full .card-tag  { color: var(--accent-full);  background: #3DFFE818; border: 1px solid #3DFFE833; }
-
-    .card-name {
-      font-family: 'Bebas Neue', Georgia, serif;
-      font-size: 38px;
-      letter-spacing: 0.04em;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .card-meta {
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .card-arrow {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 22px;
-      color: var(--muted);
-    }
-
-    .card-glow {
-      position: absolute;
-      bottom: -30px; right: -30px;
-      width: 150px; height: 150px;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
+    .full  .card-tag { color: var(--accent-full);  background: #3DFFE818; border: 1px solid #3DFFE833; }
+    .card-name { font-family: 'Bebas Neue', Georgia, serif; font-size: 38px; letter-spacing: 0.04em; line-height: 1; margin-bottom: 8px; }
+    .card-meta { font-size: 11px; color: var(--muted); line-height: 1.7; }
+    .card-arrow { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 22px; color: var(--muted); }
+    .card-glow { position: absolute; bottom: -30px; right: -30px; width: 150px; height: 150px; border-radius: 50%; pointer-events: none; }
     .upper .card-glow { background: radial-gradient(circle, #E8FF3D15, transparent 70%); }
     .full  .card-glow { background: radial-gradient(circle, #3DFFE815, transparent 70%); }
 
-    /* ── ROUTINE SCREEN ── */
-    #routine {
-      background: var(--bg);
-    }
-
-    .routine-header {
-      padding: 20px 20px 0;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
+    /* ══ ROUTINE SCREEN ══ */
+    .routine-header { padding: 20px 20px 0; border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .back-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-family: inherit;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-      padding: 0 0 14px 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      background: none; border: none; color: var(--muted); font-family: inherit;
+      font-size: 12px; letter-spacing: 0.08em; cursor: pointer; padding: 0 0 14px 0;
+      display: flex; align-items: center; gap: 6px;
     }
-
     .back-btn:active { color: var(--text); }
+    .routine-name { font-family: 'Bebas Neue', Georgia, serif; font-size: 44px; letter-spacing: 0.04em; line-height: 1; }
+    .routine-sub  { font-size: 11px; color: var(--muted); margin-top: 4px; padding-bottom: 16px; }
 
-    .routine-title-block {
-      padding-bottom: 16px;
-    }
-
-    .routine-name {
-      font-family: 'Bebas Neue', Georgia, serif;
-      font-size: 44px;
-      letter-spacing: 0.04em;
-      line-height: 1;
-    }
-
-    .routine-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* Day tabs */
-    .day-tabs {
-      display: flex;
-      gap: 0;
-      flex-shrink: 0;
-    }
-
+    .day-tabs { display: flex; }
     .day-tab {
-      flex: 1;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 14px 0 12px;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-family: inherit;
-      transition: all 0.2s;
+      flex: 1; background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--muted); cursor: pointer; padding: 14px 0 12px;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      font-family: inherit; transition: all 0.2s;
     }
 
-    /* Scrollable exercise list */
-    .exercise-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 20px 24px;
-      -webkit-overflow-scrolling: touch;
-    }
+    .exercise-scroll-pad { padding: 16px 20px 40px; }
 
     .day-focus-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 4px;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
+      display: inline-block; padding: 4px 12px; border-radius: 4px;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px;
     }
 
-    .exercise-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    /* ══ EXERCISE CARD ══ */
     .ex-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden; margin-bottom: 8px;
     }
-
-    .ex-header {
-      display: flex;
-      align-items: center;
-      padding: 13px 14px;
-      gap: 12px;
-    }
-
+    .ex-header { display: flex; align-items: center; padding: 13px 14px; gap: 12px; cursor: pointer; }
     .ex-num {
-      width: 26px;
-      height: 26px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 700;
-      flex-shrink: 0;
+      width: 26px; height: 26px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
     }
-
     .ex-info { flex: 1; min-width: 0; }
     .ex-name { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
     .ex-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
-    .ex-chevron {
-      color: #444;
-      font-size: 12px;
-      transition: transform 0.2s;
-      flex-shrink: 0;
-    }
+    /* Weight preview chips */
+    .ex-weights-preview { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+    .weight-chip { font-size: 9px; padding: 2px 7px; border-radius: 3px; letter-spacing: 0.05em; white-space: nowrap; }
+    .chip-warm     { color: var(--warm);    background: #FF9F3D18; border: 1px solid #FF9F3D33; }
+    .chip-top      { color: var(--top);     background: #E8FF3D18; border: 1px solid #E8FF3D33; }
+    .chip-backdown { color: var(--backdown);background: #3DFFE818; border: 1px solid #3DFFE833; }
+
+    .ex-chevron { color: #444; font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
+    .ex-card.open .ex-chevron { transform: rotate(180deg); }
+
+    .ex-panel { display: none; border-top: 1px solid var(--border); }
+    .ex-card.open .ex-panel { display: block; }
 
     .ex-tip {
-      display: none;
-      border-top: 1px solid transparent;
-      padding: 11px 14px 13px 52px;
-      font-size: 11px;
-      color: #888;
-      line-height: 1.65;
+      padding: 11px 14px 12px; font-size: 11px; color: #888;
+      line-height: 1.65; border-bottom: 1px solid var(--border);
     }
 
-    .ex-card.open .ex-chevron { transform: rotate(180deg); }
-    .ex-card.open .ex-tip { display: block; }
+    /* ══ WEIGHT TRACKER ══ */
+    .weight-tracker { padding: 14px 14px 16px; }
+    .wt-title { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
 
-    /* Tips section */
-    .tips-section {
-      margin-top: 24px;
+    .set-group { margin-bottom: 16px; }
+    .set-group-label {
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
     }
+    .set-group-label .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
-    .tips-label {
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 12px;
+    .set-rows { display: flex; flex-direction: column; gap: 6px; }
+
+    .set-row {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 10px;
     }
+    .set-label { font-size: 9px; color: var(--muted); width: 36px; flex-shrink: 0; }
 
-    .tip-row {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 13px 14px;
-      margin-bottom: 8px;
+    .step-btn {
+      width: 32px; height: 32px; border-radius: 5px;
+      background: #1e1e1e; border: 1px solid #2a2a2a;
+      color: var(--text); font-size: 18px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-family: inherit; flex-shrink: 0; user-select: none;
     }
+    .step-btn:active { background: #2a2a2a; }
 
+    .weight-input {
+      flex: 1; background: none; border: none; color: var(--text);
+      font-family: inherit; font-size: 16px; font-weight: 500;
+      text-align: center; outline: none; min-width: 0;
+    }
+    .weight-input::placeholder { color: #2e2e2e; }
+
+    .unit-label { font-size: 10px; color: var(--muted); flex-shrink: 0; width: 20px; }
+
+    .remove-set-btn {
+      background: none; border: none; color: #333; font-size: 14px;
+      cursor: pointer; padding: 0 2px; flex-shrink: 0; line-height: 1;
+    }
+    .remove-set-btn:active { color: #ff5555; }
+
+    .add-set-btn {
+      width: 100%; background: none; border: 1px dashed #252525;
+      border-radius: 6px; color: var(--muted); font-family: inherit;
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 9px; cursor: pointer; margin-top: 6px; transition: all 0.15s;
+    }
+    .add-set-btn:active { border-color: #444; color: var(--text); }
+
+    /* ══ TIPS ══ */
+    .tips-section { margin-top: 8px; }
+    .tips-label { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+    .tip-row { display: flex; gap: 12px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 13px 14px; margin-bottom: 8px; }
     .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
     .tip-title { font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
     .tip-body  { font-size: 10px; color: #666; line-height: 1.65; }
 
-    /* Scrollbar hidden */
-    ::-webkit-scrollbar { display: none; }
-
-    /* Install banner */
+    /* ══ INSTALL BANNER ══ */
     #install-banner {
-      display: none;
-      position: fixed;
-      bottom: calc(var(--safe-bottom) + 12px);
-      left: 16px; right: 16px;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 11px;
-      color: #aaa;
-      line-height: 1.6;
-      z-index: 100;
-      box-shadow: 0 8px 32px #000a;
+      display: none; position: fixed;
+      bottom: calc(var(--safe-bottom) + 12px); left: 16px; right: 16px;
+      background: #1a1a1a; border: 1px solid #333; border-radius: 10px;
+      padding: 14px 16px; font-size: 11px; color: #aaa; line-height: 1.6;
+      z-index: 100; box-shadow: 0 8px 32px #000a;
     }
-
     #install-banner strong { color: var(--text); }
     #close-banner {
-      float: right;
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 16px;
-      line-height: 1;
-      margin-top: -2px;
-      font-family: inherit;
+      float: right; background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 16px; line-height: 1; margin-top: -2px; font-family: inherit;
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     HOME SCREEN
-══════════════════════════════════════ -->
+<!-- HOME -->
 <div id="home" class="screen active">
   <div class="home-header">
     <div class="app-label">Your Personal Program</div>
     <div class="app-title">LI<span>FT</span></div>
     <div class="home-subtitle">3×/week · Dumbbell-based · Hypertrophy</div>
   </div>
-  <div class="program-cards">
-
-    <div class="program-card upper" onclick="openRoutine('upper')">
-      <div class="card-glow"></div>
-      <div class="card-tag">Program 1</div>
-      <div class="card-name">Upper Body<br>+ Core</div>
-      <div class="card-meta">
-        Chest · Back · Shoulders<br>
-        Biceps · Triceps · Core<br>
-        45–60 min sessions
+  <div class="scrollable">
+    <div class="program-cards">
+      <div class="program-card upper" onclick="openRoutine('upper')">
+        <div class="card-glow"></div>
+        <div class="card-tag">Program 1</div>
+        <div class="card-name">Upper Body<br>+ Core</div>
+        <div class="card-meta">Chest · Back · Shoulders<br>Biceps · Triceps · Core<br>45–60 min sessions</div>
+        <div class="card-arrow">›</div>
       </div>
-      <div class="card-arrow">›</div>
-    </div>
-
-    <div class="program-card full" onclick="openRoutine('full')">
-      <div class="card-glow"></div>
-      <div class="card-tag">Program 2</div>
-      <div class="card-name">Full Body<br>Strength</div>
-      <div class="card-meta">
-        Legs · Push · Pull · Core<br>
-        Every session hits everything<br>
-        50–65 min sessions
+      <div class="program-card full" onclick="openRoutine('full')">
+        <div class="card-glow"></div>
+        <div class="card-tag">Program 2</div>
+        <div class="card-name">Full Body<br>Strength</div>
+        <div class="card-meta">Legs · Push · Pull · Core<br>Every session hits everything<br>50–65 min sessions</div>
+        <div class="card-arrow">›</div>
       </div>
-      <div class="card-arrow">›</div>
-    </div>
-
-    <div class="tips-section" style="margin-top:8px;">
-      <div class="tips-label">⚡ Fastest Way to Gain Size</div>
-      <div class="tip-row"><div class="tip-icon">📈</div><div><div class="tip-title">Progressive Overload</div><div class="tip-body">Add weight or 1 rep every session. The single biggest driver of muscle growth.</div></div></div>
-      <div class="tip-row"><div class="tip-icon">🍗</div><div><div class="tip-title">Protein Intake</div><div class="tip-body">0.8–1g per lb of bodyweight daily. Chicken, eggs, Greek yogurt, lean beef.</div></div></div>
-      <div class="tip-row"><div class="tip-icon">😴</div><div><div class="tip-title">Sleep 7–9 Hours</div><div class="tip-body">Muscle is built during recovery. Sleep is your most powerful anabolic tool.</div></div></div>
-      <div class="tip-row"><div class="tip-icon">⚖️</div><div><div class="tip-title">Caloric Surplus</div><div class="tip-body">Eat 200–300 calories above maintenance to fuel growth without excess fat.</div></div></div>
-      <div class="tip-row"><div class="tip-icon">🔁</div><div><div class="tip-title">Mind-Muscle Connection</div><div class="tip-body">3s eccentric, squeeze at top. Feel the muscle working, not just moving weight.</div></div></div>
+      <div class="tips-section">
+        <div class="tips-label">⚡ Fastest Way to Gain Size</div>
+        <div class="tip-row"><div class="tip-icon">📈</div><div><div class="tip-title">Progressive Overload</div><div class="tip-body">Add weight or 1 rep every session. The single biggest driver of growth.</div></div></div>
+        <div class="tip-row"><div class="tip-icon">🍗</div><div><div class="tip-title">Protein Intake</div><div class="tip-body">0.8–1g per lb of bodyweight daily. Chicken, eggs, Greek yogurt, lean beef.</div></div></div>
+        <div class="tip-row"><div class="tip-icon">😴</div><div><div class="tip-title">Sleep 7–9 Hours</div><div class="tip-body">Muscle is built during recovery. Sleep is your most powerful anabolic tool.</div></div></div>
+        <div class="tip-row"><div class="tip-icon">⚖️</div><div><div class="tip-title">Caloric Surplus</div><div class="tip-body">Eat 200–300 calories above maintenance to fuel growth without excess fat.</div></div></div>
+        <div class="tip-row"><div class="tip-icon">🔁</div><div><div class="tip-title">Mind-Muscle Connection</div><div class="tip-body">3s eccentric, squeeze at top. Feel it working, not just moving weight.</div></div></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     ROUTINE SCREEN
-══════════════════════════════════════ -->
+<!-- ROUTINE -->
 <div id="routine" class="screen">
   <div class="routine-header">
     <button class="back-btn" onclick="goHome()">← Programs</button>
-    <div class="routine-title-block">
-      <div class="routine-name" id="routine-name"></div>
-      <div class="routine-sub" id="routine-sub"></div>
-    </div>
+    <div class="routine-name" id="routine-name"></div>
+    <div class="routine-sub" id="routine-sub"></div>
     <div class="day-tabs" id="day-tabs"></div>
   </div>
-  <div class="exercise-scroll" id="exercise-scroll">
-    <!-- Populated by JS -->
+  <div class="scrollable" id="exercise-scroll">
+    <div class="exercise-scroll-pad" id="exercise-list"></div>
   </div>
 </div>
 
-<!-- Install Banner (iOS) -->
+<!-- Install Banner -->
 <div id="install-banner">
   <button id="close-banner" onclick="document.getElementById('install-banner').style.display='none'">✕</button>
   <strong>Add to Home Screen</strong><br>
-  Tap <strong>Share ↑</strong> then <strong>"Add to Home Screen"</strong> to install this app.
+  Tap <strong>Share ↑</strong> then <strong>"Add to Home Screen"</strong> to install.
 </div>
 
 <script>
 // ══════════════════════════════════════
-// DATA
+// PROGRAM DATA
 // ══════════════════════════════════════
 const PROGRAMS = {
   upper: {
@@ -461,37 +296,37 @@ const PROGRAMS = {
       {
         label: "Day A", focus: "Chest & Triceps",
         exercises: [
-          { name: "DB Bench Press",              sets:4, reps:"8–10",      rest:"90s", tip:"Control the eccentric — lower for 3 seconds. The key upper-body mass builder." },
-          { name: "Incline DB Press",            sets:3, reps:"10–12",     rest:"75s", tip:"30–45° incline. Builds upper chest thickness and shelf." },
-          { name: "DB Fly",                      sets:3, reps:"12–15",     rest:"60s", tip:"Full stretch at the bottom. Slight elbow bend throughout." },
-          { name: "Close-Grip DB Press",         sets:3, reps:"10–12",     rest:"75s", tip:"Palms facing each other (neutral grip). Hammers the triceps." },
-          { name: "Overhead DB Tricep Extension",sets:3, reps:"12–15",     rest:"60s", tip:"Both hands on one DB. Full ROM — lower until forearms touch biceps." },
-          { name: "DB Skull Crushers",           sets:3, reps:"12–15",     rest:"60s", tip:"Lower slowly to temples. Maximum long-head tricep stretch." },
+          { name: "DB Bench Press",               sets:4, reps:"8–10",      rest:"90s", tip:"Control the eccentric — lower for 3 seconds. The key upper-body mass builder." },
+          { name: "Incline DB Press",             sets:3, reps:"10–12",     rest:"75s", tip:"30–45° incline. Builds upper chest thickness and shelf." },
+          { name: "DB Fly",                       sets:3, reps:"12–15",     rest:"60s", tip:"Full stretch at the bottom. Slight elbow bend throughout." },
+          { name: "Close-Grip DB Press",          sets:3, reps:"10–12",     rest:"75s", tip:"Palms facing each other (neutral grip). Hammers the triceps." },
+          { name: "Overhead DB Tricep Extension", sets:3, reps:"12–15",     rest:"60s", tip:"Both hands on one DB. Full ROM — lower until forearms touch biceps." },
+          { name: "DB Skull Crushers",            sets:3, reps:"12–15",     rest:"60s", tip:"Lower slowly to temples. Maximum long-head tricep stretch." },
         ]
       },
       {
         label: "Day B", focus: "Back & Biceps",
         exercises: [
-          { name: "DB Bent-Over Row",    sets:4, reps:"8–10",        rest:"90s", tip:"Hinge at hips, chest up, pull elbows behind you for full lat engagement." },
-          { name: "Single-Arm DB Row",   sets:3, reps:"10–12 each",  rest:"75s", tip:"Brace on a bench. Drive elbow to the ceiling, not out to the side." },
-          { name: "DB Pullover",         sets:3, reps:"12–15",       rest:"60s", tip:"Stretches lats through full range. Keep ribs down and core braced." },
-          { name: "DB Rear Delt Fly",    sets:3, reps:"15–20",       rest:"45s", tip:"Hinge forward 45°. Lead with elbows — think 'open a door'." },
-          { name: "DB Bicep Curl",       sets:4, reps:"10–12",       rest:"75s", tip:"Supinate (rotate palm up) at the top. Zero swinging." },
-          { name: "Hammer Curl",         sets:3, reps:"12–15",       rest:"60s", tip:"Neutral grip all the way. Builds brachialis for serious arm thickness." },
+          { name: "DB Bent-Over Row",   sets:4, reps:"8–10",        rest:"90s", tip:"Hinge at hips, chest up, pull elbows behind you for full lat engagement." },
+          { name: "Single-Arm DB Row",  sets:3, reps:"10–12 each",  rest:"75s", tip:"Brace on a bench. Drive elbow to the ceiling, not out to the side." },
+          { name: "DB Pullover",        sets:3, reps:"12–15",       rest:"60s", tip:"Stretches lats through full range. Keep ribs down and core braced." },
+          { name: "DB Rear Delt Fly",   sets:3, reps:"15–20",       rest:"45s", tip:"Hinge forward 45°. Lead with elbows — think 'open a door'." },
+          { name: "DB Bicep Curl",      sets:4, reps:"10–12",       rest:"75s", tip:"Supinate (rotate palm up) at the top. Zero swinging." },
+          { name: "Hammer Curl",        sets:3, reps:"12–15",       rest:"60s", tip:"Neutral grip all the way. Builds brachialis for serious arm thickness." },
         ]
       },
       {
         label: "Day C", focus: "Shoulders & Core",
         exercises: [
-          { name: "DB Overhead Press",          sets:4, reps:"8–10",       rest:"90s", tip:"Seated or standing. Press to full lockout. Core braced the entire set." },
-          { name: "DB Lateral Raise",           sets:4, reps:"15–20",      rest:"45s", tip:"Lead with pinkies, slight forward lean. Slow 3s lowering phase." },
-          { name: "DB Arnold Press",            sets:3, reps:"10–12",      rest:"75s", tip:"Rotate palms as you press. Hits all 3 heads of the deltoid." },
-          { name: "DB Shrug",                   sets:3, reps:"15–20",      rest:"45s", tip:"Hold the top contraction 1 second. Builds upper trap thickness." },
-          { name: "DB Russian Twist",           sets:3, reps:"20 total",   rest:"45s", tip:"Feet off the floor for more challenge. Rotate fully each rep." },
-          { name: "Renegade Row",               sets:3, reps:"8–10 each",  rest:"75s", tip:"Plank position. Minimal hip rotation — true core + back combo." },
-          { name: "DB Suitcase Carry",          sets:3, reps:"30m/side",   rest:"60s", tip:"Anti-lateral flexion. Builds deep core stability and obliques." },
+          { name: "DB Overhead Press",           sets:4, reps:"8–10",      rest:"90s", tip:"Seated or standing. Press to full lockout. Core braced the entire set." },
+          { name: "DB Lateral Raise",            sets:4, reps:"15–20",     rest:"45s", tip:"Lead with pinkies, slight forward lean. Slow 3s lowering phase." },
+          { name: "DB Arnold Press",             sets:3, reps:"10–12",     rest:"75s", tip:"Rotate palms as you press. Hits all 3 heads of the deltoid." },
+          { name: "DB Shrug",                    sets:3, reps:"15–20",     rest:"45s", tip:"Hold the top contraction 1 second. Builds upper trap thickness." },
+          { name: "DB Russian Twist",            sets:3, reps:"20 total",  rest:"45s", tip:"Feet off the floor for more challenge. Rotate fully each rep." },
+          { name: "Renegade Row",                sets:3, reps:"8–10 each", rest:"75s", tip:"Plank position. Minimal hip rotation — true core + back combo." },
+          { name: "DB Suitcase Carry",           sets:3, reps:"30m/side",  rest:"60s", tip:"Anti-lateral flexion. Builds deep core stability and obliques." },
         ]
-      },
+      }
     ]
   },
   full: {
@@ -502,24 +337,24 @@ const PROGRAMS = {
       {
         label: "Day 1", focus: "Power Focus",
         exercises: [
-          { name: "DB Goblet Squat",          sets:4, reps:"10–12",     rest:"90s", tip:"Hold DB at chest, sit deep, knees out. King of dumbbell leg exercises." },
-          { name: "DB Romanian Deadlift",     sets:4, reps:"10–12",     rest:"90s", tip:"Hinge, not squat. Feel the hamstring stretch — stop before rounding." },
-          { name: "DB Bench Press",           sets:3, reps:"8–10",      rest:"90s", tip:"Control the descent. 3-second eccentric for maximum muscle stimulus." },
-          { name: "DB Bent-Over Row",         sets:3, reps:"8–10",      rest:"90s", tip:"Brace core, chest up, pull elbows behind the body." },
-          { name: "DB Overhead Press",        sets:3, reps:"10–12",     rest:"75s", tip:"Full lockout at top. Don't shrug — pack your shoulders." },
-          { name: "DB Plank Row",             sets:3, reps:"8 each",    rest:"60s", tip:"Plank on DBs. Row one arm. Core fights rotation — that's the point." },
+          { name: "DB Goblet Squat",      sets:4, reps:"10–12",    rest:"90s", tip:"Hold DB at chest, sit deep, knees out. King of dumbbell leg exercises." },
+          { name: "DB Romanian Deadlift", sets:4, reps:"10–12",    rest:"90s", tip:"Hinge, not squat. Feel the hamstring stretch — stop before rounding." },
+          { name: "DB Bench Press",       sets:3, reps:"8–10",     rest:"90s", tip:"Control the descent. 3-second eccentric for maximum muscle stimulus." },
+          { name: "DB Bent-Over Row",     sets:3, reps:"8–10",     rest:"90s", tip:"Brace core, chest up, pull elbows behind the body." },
+          { name: "DB Overhead Press",    sets:3, reps:"10–12",    rest:"75s", tip:"Full lockout at top. Don't shrug — pack your shoulders." },
+          { name: "DB Plank Row",         sets:3, reps:"8 each",   rest:"60s", tip:"Plank on DBs. Row one arm. Core fights rotation — that's the point." },
         ]
       },
       {
         label: "Day 2", focus: "Volume Focus",
         exercises: [
-          { name: "DB Reverse Lunge",         sets:4, reps:"10 each",   rest:"75s", tip:"Step back, drop straight down. Front shin stays vertical." },
-          { name: "DB Sumo Squat",            sets:3, reps:"12–15",     rest:"75s", tip:"Wide stance, toes out. Targets inner quads and glutes differently." },
-          { name: "Incline DB Press",         sets:3, reps:"10–12",     rest:"75s", tip:"Upper chest builder. Control the stretch at the bottom of each rep." },
-          { name: "Single-Arm DB Row",        sets:3, reps:"10–12 each",rest:"75s", tip:"Brace on bench. Full stretch at the bottom, full contraction at top." },
-          { name: "DB Lateral Raise",         sets:3, reps:"15–20",     rest:"45s", tip:"Slow and controlled. No momentum — shoulders only." },
-          { name: "DB Bicep Curl",            sets:3, reps:"12–15",     rest:"60s", tip:"Supinate at the top. Hold the contraction for 1 second." },
-          { name: "DB Overhead Tricep Ext.",  sets:3, reps:"12–15",     rest:"60s", tip:"Full range of motion — elbows pointed forward, lower behind head." },
+          { name: "DB Reverse Lunge",        sets:4, reps:"10 each",    rest:"75s", tip:"Step back, drop straight down. Front shin stays vertical." },
+          { name: "DB Sumo Squat",           sets:3, reps:"12–15",      rest:"75s", tip:"Wide stance, toes out. Targets inner quads and glutes differently." },
+          { name: "Incline DB Press",        sets:3, reps:"10–12",      rest:"75s", tip:"Upper chest builder. Control the stretch at the bottom of each rep." },
+          { name: "Single-Arm DB Row",       sets:3, reps:"10–12 each", rest:"75s", tip:"Brace on bench. Full stretch at bottom, full contraction at top." },
+          { name: "DB Lateral Raise",        sets:3, reps:"15–20",      rest:"45s", tip:"Slow and controlled. No momentum — shoulders only." },
+          { name: "DB Bicep Curl",           sets:3, reps:"12–15",      rest:"60s", tip:"Supinate at the top. Hold the contraction for 1 second." },
+          { name: "DB Overhead Tricep Ext.", sets:3, reps:"12–15",      rest:"60s", tip:"Full range of motion — elbows pointed forward, lower behind head." },
         ]
       },
       {
@@ -533,28 +368,43 @@ const PROGRAMS = {
           { name: "DB Woodchop",              sets:3, reps:"12 each",   rest:"60s", tip:"Rotate from hips, not arms. Builds rotational core power." },
           { name: "DB Farmer's Carry",        sets:3, reps:"40m",       rest:"60s", tip:"Heavy weight, tall posture, breathe normally. Full-body conditioning finisher." },
         ]
-      },
+      }
     ]
   }
 };
 
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let currentProgram = null;
-let currentDay = 0;
+// Set type definitions
+const SET_TYPES = [
+  { key: 'warm',     label: 'Warm-up Sets',   color: 'var(--warm)',     dot: '#FF9F3D', chipCls: 'chip-warm',     chipLabel: 'Warm-up' },
+  { key: 'top',      label: 'Top Sets',        color: 'var(--top)',      dot: '#E8FF3D', chipCls: 'chip-top',      chipLabel: 'Top'     },
+  { key: 'backdown', label: 'Back-down Sets',  color: 'var(--backdown)', dot: '#3DFFE8', chipCls: 'chip-backdown', chipLabel: 'Back-dn' },
+];
+const DEFAULT_COUNTS = { warm: 1, top: 2, backdown: 1 };
 
 // ══════════════════════════════════════
-// NAVIGATION
+// STORAGE HELPERS
 // ══════════════════════════════════════
+const wKey = (p,d,e,t,i) => `lw_${p}_${d}_${e}_${t}_${i}`;
+const cKey = (p,d,e,t)   => `lc_${p}_${d}_${e}_${t}`;
+
+const getW = (p,d,e,t,i)   => localStorage.getItem(wKey(p,d,e,t,i)) || '';
+const setW = (p,d,e,t,i,v) => localStorage.setItem(wKey(p,d,e,t,i), v);
+const getC = (p,d,e,t)     => { const v = localStorage.getItem(cKey(p,d,e,t)); return v!==null ? parseInt(v) : DEFAULT_COUNTS[t]; };
+const setC = (p,d,e,t,n)   => localStorage.setItem(cKey(p,d,e,t), n);
+
+// ══════════════════════════════════════
+// STATE & NAVIGATION
+// ══════════════════════════════════════
+let currentProgram = null, currentDay = 0;
+
 function openRoutine(key) {
   currentProgram = key;
   currentDay = 0;
   const prog = PROGRAMS[key];
   document.getElementById('routine-name').textContent = prog.name;
-  document.getElementById('routine-sub').textContent = prog.sub;
+  document.getElementById('routine-sub').textContent  = prog.sub;
   buildTabs(prog);
-  renderDay(prog, 0);
+  renderDay(0);
   document.getElementById('home').classList.remove('active');
   document.getElementById('routine').classList.add('active');
   document.getElementById('exercise-scroll').scrollTop = 0;
@@ -569,124 +419,200 @@ function goHome() {
 // TABS
 // ══════════════════════════════════════
 function buildTabs(prog) {
-  const container = document.getElementById('day-tabs');
-  container.innerHTML = '';
+  const c = document.getElementById('day-tabs');
+  c.innerHTML = '';
   prog.days.forEach((day, i) => {
     const btn = document.createElement('button');
     btn.className = 'day-tab';
     btn.textContent = day.label;
-    btn.style.borderBottomColor = i === 0 ? prog.accent : 'transparent';
-    btn.style.color = i === 0 ? prog.accent : '';
+    btn.style.borderBottomColor = i===0 ? prog.accent : 'transparent';
+    btn.style.color = i===0 ? prog.accent : '';
     btn.onclick = () => switchDay(i);
-    container.appendChild(btn);
+    c.appendChild(btn);
   });
 }
 
 function switchDay(idx) {
   currentDay = idx;
   const prog = PROGRAMS[currentProgram];
-  const tabs = document.querySelectorAll('.day-tab');
-  tabs.forEach((t, i) => {
-    t.style.borderBottomColor = i === idx ? prog.accent : 'transparent';
-    t.style.color = i === idx ? prog.accent : '';
+  document.querySelectorAll('.day-tab').forEach((t,i) => {
+    t.style.borderBottomColor = i===idx ? prog.accent : 'transparent';
+    t.style.color = i===idx ? prog.accent : '';
   });
-  renderDay(prog, idx);
+  renderDay(idx);
   document.getElementById('exercise-scroll').scrollTop = 0;
 }
 
 // ══════════════════════════════════════
 // RENDER DAY
 // ══════════════════════════════════════
-function renderDay(prog, dayIdx) {
-  const day = prog.days[dayIdx];
-  const accent = prog.accent;
-  const scroll = document.getElementById('exercise-scroll');
+function renderDay(dayIdx) {
+  const prog = PROGRAMS[currentProgram];
+  const day  = prog.days[dayIdx];
+  const acc  = prog.accent;
+  const list = document.getElementById('exercise-list');
+  list.innerHTML = '';
 
-  let html = `
-    <div class="day-focus-badge" style="color:${accent};background:${accent}18;border:1px solid ${accent}44">
-      ${day.focus}
-    </div>
-    <div class="exercise-list">
-  `;
+  const badge = document.createElement('div');
+  badge.className = 'day-focus-badge';
+  badge.style.cssText = `color:${acc};background:${acc}18;border:1px solid ${acc}44`;
+  badge.textContent = day.focus;
+  list.appendChild(badge);
 
-  day.exercises.forEach((ex, i) => {
-    html += `
-      <div class="ex-card" onclick="toggleEx(this)">
-        <div class="ex-header">
-          <div class="ex-num" style="color:${accent};background:${accent}15;border:1px solid ${accent}30">${i+1}</div>
-          <div class="ex-info">
-            <div class="ex-name">${ex.name}</div>
-            <div class="ex-meta">${ex.sets} sets · ${ex.reps} reps · ${ex.rest} rest</div>
-          </div>
-          <div class="ex-chevron">▾</div>
-        </div>
-        <div class="ex-tip" style="border-top-color:${accent}22;background:${accent}08">
-          💡 ${ex.tip}
-        </div>
-      </div>
-    `;
+  day.exercises.forEach((ex, exIdx) => {
+    list.appendChild(buildExCard(ex, exIdx, dayIdx, acc));
   });
 
-  html += `</div>`;
-
-  // Schedule suggestion
-  const schedule = currentProgram === 'upper'
-    ? 'Mon (A) · Wed (B) · Fri (C)'
-    : 'Mon (Day 1) · Wed (Day 2) · Fri (Day 3)';
-
-  html += `
-    <div class="tips-section">
+  const schedule = currentProgram==='upper' ? 'Mon (A) · Wed (B) · Fri (C)' : 'Mon (1) · Wed (2) · Fri (3)';
+  list.insertAdjacentHTML('beforeend', `
+    <div class="tips-section" style="margin-top:16px">
       <div class="tips-label">📅 Suggested Schedule</div>
-      <div class="tip-row">
-        <div class="tip-icon">🗓</div>
-        <div>
-          <div class="tip-title">${schedule}</div>
-          <div class="tip-body">Never train the same muscles two days in a row. Rest days are when you actually grow.</div>
-        </div>
-      </div>
+      <div class="tip-row"><div class="tip-icon">🗓</div><div><div class="tip-title">${schedule}</div><div class="tip-body">Never train the same muscles two days in a row. Rest days are when you grow.</div></div></div>
       <div class="tips-label" style="margin-top:16px">⚡ Keys to Growth</div>
-      <div class="tip-row"><div class="tip-icon">📈</div><div><div class="tip-title">Progressive Overload</div><div class="tip-body">Add 2.5–5 lbs or 1 rep every session. This is non-negotiable for gains.</div></div></div>
-      <div class="tip-row"><div class="tip-icon">🍗</div><div><div class="tip-title">Hit Your Protein</div><div class="tip-body">0.8–1g per lb bodyweight. Spread it over 4–5 meals throughout the day.</div></div></div>
+      <div class="tip-row"><div class="tip-icon">📈</div><div><div class="tip-title">Progressive Overload</div><div class="tip-body">Add 2.5–5 lbs or 1 rep every session. Non-negotiable for gains.</div></div></div>
+      <div class="tip-row"><div class="tip-icon">🍗</div><div><div class="tip-title">Hit Your Protein</div><div class="tip-body">0.8–1g per lb bodyweight. Spread it over 4–5 meals daily.</div></div></div>
       <div class="tip-row"><div class="tip-icon">😴</div><div><div class="tip-title">Sleep 7–9 Hours</div><div class="tip-body">Growth hormone peaks at night. Skimping on sleep kills your gains.</div></div></div>
+    </div>
+  `);
+}
+
+// ══════════════════════════════════════
+// BUILD EXERCISE CARD
+// ══════════════════════════════════════
+function buildExCard(ex, exIdx, dayIdx, accent) {
+  const pk = currentProgram;
+  const card = document.createElement('div');
+  card.className = 'ex-card';
+  card.id = `ex-${dayIdx}-${exIdx}`;
+
+  card.innerHTML = `
+    <div class="ex-header" onclick="toggleEx('ex-${dayIdx}-${exIdx}')">
+      <div class="ex-num" style="color:${accent};background:${accent}15;border:1px solid ${accent}30">${exIdx+1}</div>
+      <div class="ex-info">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-meta">${ex.sets} sets · ${ex.reps} reps · ${ex.rest} rest</div>
+        <div class="ex-weights-preview" id="preview-${dayIdx}-${exIdx}"></div>
+      </div>
+      <div class="ex-chevron">▾</div>
+    </div>
+    <div class="ex-panel">
+      <div class="ex-tip" style="background:${accent}08">💡 ${ex.tip}</div>
+      <div class="weight-tracker" id="wt-${dayIdx}-${exIdx}"></div>
     </div>
   `;
 
-  scroll.innerHTML = html;
+  // Render preview + tracker after DOM insert
+  requestAnimationFrame(() => {
+    refreshPreview(pk, dayIdx, exIdx);
+    renderTracker(pk, dayIdx, exIdx, accent);
+  });
+
+  return card;
 }
 
-function toggleEx(card) {
-  card.classList.toggle('open');
+// ══════════════════════════════════════
+// WEIGHT TRACKER
+// ══════════════════════════════════════
+function renderTracker(pk, dayIdx, exIdx, accent) {
+  const container = document.getElementById(`wt-${dayIdx}-${exIdx}`);
+  if (!container) return;
+  container.innerHTML = `<div class="wt-title">🏋️ Weight Log (lbs)</div>`;
+
+  SET_TYPES.forEach(type => {
+    const count = getC(pk, dayIdx, exIdx, type.key);
+    const group = document.createElement('div');
+    group.className = 'set-group';
+
+    let rows = '';
+    for (let i = 0; i < count; i++) {
+      const val = getW(pk, dayIdx, exIdx, type.key, i);
+      rows += `
+        <div class="set-row" id="row-${pk}-${dayIdx}-${exIdx}-${type.key}-${i}">
+          <div class="set-label">${count > 1 ? 'Set '+(i+1) : 'Set 1'}</div>
+          <button class="step-btn" onclick="stepW('${pk}',${dayIdx},${exIdx},'${type.key}',${i},-5)">−</button>
+          <input class="weight-input" type="number" inputmode="decimal" placeholder="—"
+            value="${val}"
+            onchange="saveW('${pk}',${dayIdx},${exIdx},'${type.key}',${i},this.value)"
+            onfocus="this.select()"
+          />
+          <button class="step-btn" onclick="stepW('${pk}',${dayIdx},${exIdx},'${type.key}',${i},5)">+</button>
+          <div class="unit-label">lbs</div>
+          ${count > 1 ? `<button class="remove-set-btn" onclick="removeSet('${pk}',${dayIdx},${exIdx},'${type.key}',${i},${count})">✕</button>` : '<div style="width:18px"></div>'}
+        </div>`;
+    }
+
+    group.innerHTML = `
+      <div class="set-group-label" style="color:${type.color}">
+        <span class="dot" style="background:${type.dot}"></span>${type.label}
+      </div>
+      <div class="set-rows">${rows}</div>
+      <button class="add-set-btn" onclick="addSet('${pk}',${dayIdx},${exIdx},'${type.key}',${count},'${accent}')">
+        + Add ${type.label.replace(' Sets','')} Set
+      </button>`;
+    container.appendChild(group);
+  });
+}
+
+function saveW(pk, dayIdx, exIdx, type, i, val) {
+  setW(pk, dayIdx, exIdx, type, i, val);
+  refreshPreview(pk, dayIdx, exIdx);
+}
+
+function stepW(pk, dayIdx, exIdx, type, i, delta) {
+  const input = document.querySelector(`#row-${pk}-${dayIdx}-${exIdx}-${type}-${i} .weight-input`);
+  if (!input) return;
+  const next = Math.max(0, (parseFloat(input.value) || 0) + delta);
+  input.value = next % 1 === 0 ? next : next.toFixed(1);
+  setW(pk, dayIdx, exIdx, type, i, input.value);
+  refreshPreview(pk, dayIdx, exIdx);
+}
+
+function addSet(pk, dayIdx, exIdx, type, currentCount, accent) {
+  setC(pk, dayIdx, exIdx, type, currentCount + 1);
+  renderTracker(pk, dayIdx, exIdx, accent);
+}
+
+function removeSet(pk, dayIdx, exIdx, type, setIdx, count) {
+  for (let i = setIdx; i < count - 1; i++) setW(pk, dayIdx, exIdx, type, i, getW(pk, dayIdx, exIdx, type, i+1));
+  localStorage.removeItem(wKey(pk, dayIdx, exIdx, type, count-1));
+  setC(pk, dayIdx, exIdx, type, count-1);
+  renderTracker(pk, dayIdx, exIdx, PROGRAMS[pk].accent);
+}
+
+function refreshPreview(pk, dayIdx, exIdx) {
+  const preview = document.getElementById(`preview-${dayIdx}-${exIdx}`);
+  if (!preview) return;
+  let chips = '';
+  SET_TYPES.forEach(t => {
+    const count = getC(pk, dayIdx, exIdx, t.key);
+    for (let i = 0; i < count; i++) {
+      const w = getW(pk, dayIdx, exIdx, t.key, i);
+      if (w) chips += `<span class="weight-chip ${t.chipCls}">${t.chipLabel}${count>1?' '+(i+1):''}: ${w}</span>`;
+    }
+  });
+  preview.innerHTML = chips;
+}
+
+// ══════════════════════════════════════
+// TOGGLE CARD
+// ══════════════════════════════════════
+function toggleEx(id) {
+  document.getElementById(id)?.classList.toggle('open');
 }
 
 // ══════════════════════════════════════
 // iOS INSTALL BANNER
 // ══════════════════════════════════════
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-const isStandalone = window.navigator.standalone;
-if (isIOS && !isStandalone) {
-  setTimeout(() => {
-    document.getElementById('install-banner').style.display = 'block';
-  }, 2000);
+if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone) {
+  setTimeout(() => { document.getElementById('install-banner').style.display = 'block'; }, 2500);
 }
 
 // ══════════════════════════════════════
-// SERVICE WORKER (inline via blob)
+// SERVICE WORKER
 // ══════════════════════════════════════
 if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'lift-v1';
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
-    });
-    self.addEventListener('fetch', e => {
-      e.respondWith(
-        caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/')))
-      );
-    });
-  `;
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  const swURL = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swURL).catch(() => {});
+  const sw = `const C='lift-v3';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['/']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('/')))));`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
 </body>
