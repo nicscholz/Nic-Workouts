@@ -76,21 +76,24 @@
       transition: transform 0.15s, opacity 0.15s; border: 1px solid transparent;
     }
     .program-card:active { transform: scale(0.97); opacity: 0.9; }
-    .program-card.upper { background: #111; border-color: #E8FF3D33; }
-    .program-card.full  { background: #0d1111; border-color: #3DFFE833; }
+    .program-card.upper   { background: #111; border-color: #E8FF3D33; }
+    .program-card.full    { background: #0d1111; border-color: #3DFFE833; }
+    .program-card.jackson { background: #110d0a; border-color: #FF6B3D33; }
 
     .card-tag {
       font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
       margin-bottom: 10px; display: inline-block; padding: 3px 10px; border-radius: 3px;
     }
-    .upper .card-tag { color: var(--accent-upper); background: #E8FF3D18; border: 1px solid #E8FF3D33; }
-    .full  .card-tag { color: var(--accent-full);  background: #3DFFE818; border: 1px solid #3DFFE833; }
+    .upper   .card-tag { color: var(--accent-upper); background: #E8FF3D18; border: 1px solid #E8FF3D33; }
+    .full    .card-tag { color: var(--accent-full);  background: #3DFFE818; border: 1px solid #3DFFE833; }
+    .jackson .card-tag { color: #FF6B3D; background: #FF6B3D18; border: 1px solid #FF6B3D33; }
     .card-name { font-family: 'Bebas Neue', Georgia, serif; font-size: 38px; letter-spacing: 0.04em; line-height: 1; margin-bottom: 8px; }
     .card-meta { font-size: 11px; color: var(--muted); line-height: 1.7; }
     .card-arrow { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 22px; color: var(--muted); }
     .card-glow { position: absolute; bottom: -30px; right: -30px; width: 150px; height: 150px; border-radius: 50%; pointer-events: none; }
-    .upper .card-glow { background: radial-gradient(circle, #E8FF3D15, transparent 70%); }
-    .full  .card-glow { background: radial-gradient(circle, #3DFFE815, transparent 70%); }
+    .upper   .card-glow { background: radial-gradient(circle, #E8FF3D15, transparent 70%); }
+    .full    .card-glow { background: radial-gradient(circle, #3DFFE815, transparent 70%); }
+    .jackson .card-glow { background: radial-gradient(circle, #FF6B3D15, transparent 70%); }
 
     /* ══ ROUTINE SCREEN ══ */
     .routine-header { padding: 20px 20px 0; border-bottom: 1px solid var(--border); flex-shrink: 0; }
@@ -251,6 +254,13 @@
         <div class="card-meta">Legs · Push · Pull · Core<br>Every session hits everything<br>50–65 min sessions</div>
         <div class="card-arrow">›</div>
       </div>
+      <div class="program-card jackson" onclick="openRoutine('jackson')">
+        <div class="card-glow"></div>
+        <div class="card-tag">Program 3 — Trainer</div>
+        <div class="card-name">Jackson's<br>Workout</div>
+        <div class="card-meta">Anterior · Posterior · Solo<br>Trainer-prescribed program<br>60–75 min sessions</div>
+        <div class="card-arrow">›</div>
+      </div>
       <div class="tips-section">
         <div class="tips-label">⚡ Fastest Way to Gain Size</div>
         <div class="tip-row"><div class="tip-icon">📈</div><div><div class="tip-title">Progressive Overload</div><div class="tip-body">Add weight or 1 rep every session. The single biggest driver of growth.</div></div></div>
@@ -325,6 +335,52 @@ const PROGRAMS = {
           { name: "DB Russian Twist",            sets:3, reps:"20 total",  rest:"45s", tip:"Feet off the floor for more challenge. Rotate fully each rep." },
           { name: "Renegade Row",                sets:3, reps:"8–10 each", rest:"75s", tip:"Plank position. Minimal hip rotation — true core + back combo." },
           { name: "DB Suitcase Carry",           sets:3, reps:"30m/side",  rest:"60s", tip:"Anti-lateral flexion. Builds deep core stability and obliques." },
+        ]
+      }
+    ]
+  },
+  jackson: {
+    name: "Jackson's Workout",
+    sub: "Trainer Program · Anterior · Posterior · Solo · 3×/week",
+    accent: "#FF6B3D",
+    days: [
+      {
+        label: "Day 1", focus: "Anterior Chain — Chest & Legs",
+        exercises: [
+          { name: "Flat DB Bench Press (Warm-up)",    sets:2, reps:"10",        rest:"60s",  tip:"Treat warm-up sets as if they are your heaviest. Dial in technique, stability, and tempo." },
+          { name: "Flat DB Bench Press (Working)",    sets:4, reps:"5",         rest:"90s",  tip:"Goal is to accumulate volume. Do not exceed 8 reps even if it feels easy. Note difficulty each set." },
+          { name: "DB Goblet Squat (Warm-up)",        sets:2, reps:"10",        rest:"60s",  tip:"Keep things light. Focus on breathing, bracing, tempo, and stance comfort." },
+          { name: "DB Goblet Squat (Top Set)",        sets:3, reps:"5",         rest:"90s",  tip:"Focus more on breathing and bracing than load on your first session." },
+          { name: "DB Goblet Squat (Back-down)",      sets:2, reps:"10",        rest:"60s",  tip:"Lighter than top set. Accumulate reps with clean technique." },
+          { name: "Arnold Press",                     sets:3, reps:"5–6",       rest:"75s",  tip:"Bench one incline below fully upright. Slight arch in back, slow controlled tempo." },
+          { name: "Walking Lunges",                   sets:3, reps:"8 per leg", rest:"60s",  tip:"5 lbs per hand. Control each step — don't rush the movement." },
+          { name: "Tricep Pushdowns (Cable)",         sets:3, reps:"12",        rest:"60s",  tip:"Cable at highest setting. One arm at a time, elbow pinned to your side." },
+        ]
+      },
+      {
+        label: "Day 2", focus: "Posterior Chain — Back, Hamstrings, Glutes & Biceps",
+        exercises: [
+          { name: "Barbell RDL (Warm-up)",      sets:2, reps:"8",         rest:"60s",  tip:"Feet shoulder-width, slightly outward. Keep legs slightly bent, back flat. Bar tracks down legs. Feel it in upper hamstrings." },
+          { name: "Barbell RDL (Working Sets)", sets:4, reps:"5",         rest:"90s",  tip:"Stare at a 45° angle to the ground. Back stays flat. Drive hips forward at the top." },
+          { name: "Single-Arm DB Row",          sets:3, reps:"8 each",    rest:"75s",  tip:"Targeting traps. When arm extends, pull shoulder back to engage lat, then row. Hand at slight 45° angle." },
+          { name: "Single-Leg RDL (Smith)",     sets:3, reps:"8 per leg", rest:"75s",  tip:"Keep standing leg slightly bent. Extend back leg straight in a pendulum motion." },
+          { name: "Bicep Curls (Incline)",      sets:3, reps:"10",        rest:"60s",  tip:"Bench at 60°. Elbows pinned to side of bench. Slow tempo — curl and control the descent." },
+          { name: "Cable Curl (Single Arm)",    sets:3, reps:"10",        rest:"60s",  tip:"Full extension at bottom, full contraction at top. Slow and deliberate tempo." },
+          { name: "Cable Face Pulls",           sets:2, reps:"12",        rest:"45s",  tip:"Thumbs toward face (pronated grip). Pull directly toward nose bridge at eye level." },
+          { name: "Cable Pallof Press",         sets:2, reps:"12",        rest:"45s",  tip:"Wide stance, line between feet consistent each session. Push and pull from belly button. Core and glutes engaged throughout." },
+        ]
+      },
+      {
+        label: "Day 3", focus: "Solo — Chest, Shoulders, Back & Core",
+        exercises: [
+          { name: "Incline DB Bench Press (Warm-up)", sets:2, reps:"8–10",    rest:"60s",  tip:"Bench at 45° or one notch lower. Light weight to prime the shoulder joint." },
+          { name: "Incline DB Bench Press (Working)", sets:4, reps:"7–8",     rest:"90s",  tip:"Leave 2–3 reps in the tank each set. Never go to failure. Lower reps by 1–2 if form breaks down." },
+          { name: "Farmer's Carry (DB)",              sets:3, reps:"20 steps", rest:"60s", tip:"Tuck pelvis, engage abs, shoulders back without bending arms. Slow steps, keep weights still, breathe normally." },
+          { name: "Barbell Deadlift",                 sets:2, reps:"5",        rest:"90s", tip:"Bar over mid-foot, chest up, brace hard. Drive the floor away from you — don't think about pulling." },
+          { name: "Delt Raise — Single Arm (DB)",     sets:3, reps:"10",       rest:"60s", tip:"Hold a machine, lean slightly. Raise slightly forward (not straight to side). Pause at shoulder height — don't go above." },
+          { name: "Lat Pulldown",                     sets:3, reps:"8",        rest:"75s", tip:"Narrow grip just inside shoulder width, palms facing up (chin-up position). Slow tempo, pause at top each rep." },
+          { name: "Banded Dead Bug",                  sets:3, reps:"10",       rest:"45s", tip:"Longer band, medium thickness. Lower back stays pressed to floor the entire time." },
+          { name: "Kneeling Cable Crunch",            sets:3, reps:"12",       rest:"45s", tip:"Pull with your abs, not your arms. Round your spine fully — don't just hinge at the hips." },
         ]
       }
     ]
@@ -463,7 +519,7 @@ function renderDay(dayIdx) {
     list.appendChild(buildExCard(ex, exIdx, dayIdx, acc));
   });
 
-  const schedule = currentProgram==='upper' ? 'Mon (A) · Wed (B) · Fri (C)' : 'Mon (1) · Wed (2) · Fri (3)';
+  const schedule = currentProgram==='upper' ? 'Mon (A) · Wed (B) · Fri (C)' : currentProgram==='jackson' ? 'Mon (Day 1) · Wed (Day 2) · Fri (Day 3)' : 'Mon (1) · Wed (2) · Fri (3)';
   list.insertAdjacentHTML('beforeend', `
     <div class="tips-section" style="margin-top:16px">
       <div class="tips-label">📅 Suggested Schedule</div>
@@ -599,6 +655,45 @@ function refreshPreview(pk, dayIdx, exIdx) {
 function toggleEx(id) {
   document.getElementById(id)?.classList.toggle('open');
 }
+
+// ══════════════════════════════════════
+// PRE-POPULATE JACKSON'S WEIGHTS
+// ══════════════════════════════════════
+function seedJacksonWeights() {
+  const seed = (d,e,t,sets,weights) => {
+    if (localStorage.getItem(cKey('jackson',d,e,t)) !== null) return;
+    localStorage.setItem(cKey('jackson',d,e,t), sets);
+    weights.forEach((w,i) => { if (w) localStorage.setItem(wKey('jackson',d,e,t,i), w); });
+  };
+  // Day 1
+  seed(0,0,'warm',1,['20']); seed(0,0,'top',2,['20','20']); seed(0,0,'backdown',0,[]);
+  seed(0,1,'warm',0,[]); seed(0,1,'top',2,['50','60']); seed(0,1,'backdown',2,['50','50']);
+  seed(0,2,'warm',1,['10']); seed(0,2,'top',1,['10']); seed(0,2,'backdown',0,[]);
+  seed(0,3,'warm',0,[]); seed(0,3,'top',3,['40','40','40']); seed(0,3,'backdown',0,[]);
+  seed(0,4,'warm',0,[]); seed(0,4,'top',0,[]); seed(0,4,'backdown',2,['25','25']);
+  seed(0,5,'warm',0,[]); seed(0,5,'top',3,['40','40','40']); seed(0,5,'backdown',0,[]);
+  seed(0,6,'warm',0,[]); seed(0,6,'top',3,['5','5','5']); seed(0,6,'backdown',0,[]);
+  seed(0,7,'warm',0,[]); seed(0,7,'top',3,['7.5','7.5','7.5']); seed(0,7,'backdown',0,[]);
+  // Day 2
+  seed(1,0,'warm',2,['65','65']); seed(1,0,'top',0,[]); seed(1,0,'backdown',0,[]);
+  seed(1,1,'warm',0,[]); seed(1,1,'top',2,['115','125']); seed(1,1,'backdown',2,['135','135']);
+  seed(1,2,'warm',0,[]); seed(1,2,'top',3,['20','20','20']); seed(1,2,'backdown',0,[]);
+  seed(1,3,'warm',0,[]); seed(1,3,'top',3,['20','20','20']); seed(1,3,'backdown',0,[]);
+  seed(1,4,'warm',0,[]); seed(1,4,'top',3,['10','10','10']); seed(1,4,'backdown',0,[]);
+  seed(1,5,'warm',0,[]); seed(1,5,'top',3,['20','20','20']); seed(1,5,'backdown',0,[]);
+  seed(1,6,'warm',0,[]); seed(1,6,'top',2,['10','10']); seed(1,6,'backdown',0,[]);
+  seed(1,7,'warm',0,[]); seed(1,7,'top',2,['20','20']); seed(1,7,'backdown',0,[]);
+  // Day 3
+  seed(2,0,'warm',2,['20','30']); seed(2,0,'top',0,[]); seed(2,0,'backdown',0,[]);
+  seed(2,1,'warm',0,[]); seed(2,1,'top',4,['50','50','50','50']); seed(2,1,'backdown',0,[]);
+  seed(2,2,'warm',0,[]); seed(2,2,'top',3,['','','']); seed(2,2,'backdown',0,[]);
+  seed(2,3,'warm',0,[]); seed(2,3,'top',2,['','']); seed(2,3,'backdown',0,[]);
+  seed(2,4,'warm',0,[]); seed(2,4,'top',3,['','','']); seed(2,4,'backdown',0,[]);
+  seed(2,5,'warm',0,[]); seed(2,5,'top',3,['','','']); seed(2,5,'backdown',0,[]);
+  seed(2,6,'warm',0,[]); seed(2,6,'top',3,['','','']); seed(2,6,'backdown',0,[]);
+  seed(2,7,'warm',0,[]); seed(2,7,'top',3,['','','']); seed(2,7,'backdown',0,[]);
+}
+seedJacksonWeights();
 
 // ══════════════════════════════════════
 // iOS INSTALL BANNER
